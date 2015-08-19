@@ -30,6 +30,7 @@ core.on('bertStatus', Meteor.bindEnvironment(function handler(eventData) {
     	
     	currentIdInc = BertStatus.findOne({},{sort:{idInc:-1}}).idInc || 1;
 
+    		//Add END/IN tag
 			BertStatus.insert({
               bertStatus: 0,
               bertStatusString: 'I\'m in!',
@@ -45,6 +46,25 @@ core.on('bertStatus', Meteor.bindEnvironment(function handler(eventData) {
               createdAt: new Date(),
               idInc: currentIdInc + 2
               });
+
+			//Recalculate IN total
+		     var inStartTotal=0;
+		     var cursor=BertStatus.find({bertStatus: 1, startEnd:"Start"}).fetch();
+		     cursor.forEach(function(createdAt){
+		     var inStartTotal = inStartTotal + Date.parse(createdAt);
+		     });
+		     var inEndTotal=0;
+		     var cursor=BertStatus.find({bertStatus: 1, startEnd:"End"}).fetch();
+		     cursor.forEach(function(createdAt){
+		     var inEndTotal = inEndTotal + Date.parse(createdAt);
+		     });
+		     inTotal = inEndTotal - inStartTotal
+		     //return inTotal;
+		     console.log("in total: " + inTotal)
+
+		     console.log("furp")
+
+
 
 
 	}
@@ -69,49 +89,30 @@ core.on('bertStatus', Meteor.bindEnvironment(function handler(eventData) {
               idInc: currentIdInc + 2
               });
 
+			//Recalculate OUT total
+		     var outStartTotal=0;
+		     var cursor=BertStatus.find({bertStatus: 0, startEnd:"Start"});
+		     
+		     cursor.forEach(function(row){
+		     var outStartTotal = outStartTotal + Date.parse(row.createdAt);
+		     });
+		     var outEndTotal=0;
+		     var cursor=BertStatus.find({bertStatus: 0, startEnd:"End"});
+		     cursor.forEach(function(row){
+		     var outEndTotal = outEndTotal + Date.parse(row.createdAt);
+		     });
+		     outTotal = outEndTotal - outStartTotal
+		     //return outTotal;
+		     console.log("out total: " + outTotal)
+		     console.log("furp")
+
 	}
 
 
 
-     var sum=0;
-     var cursor=BertStatus.find({bertStatus: 1, startEnd:"Start"});
-     cursor.forEach(function(createdAt){
-       sum = sum + createdAt
-     });
-     return sum;
 
 
-	//update calculation for the time bert is IN and OUT. REMEBER 1 is OUT.
-	//increment through records
-	    
-	    //calculate total OUT time:
-	    var totalInOutRecords = BertStatus.find({}).count();
-		for (var i = 0; i < totalInOutRecords; i++) {
-		
-		 timeOutsideStartVar = BertStatus.findOne( 
-			{ bertStatus: 1 }, 
-			{ sort: { createdAt: -1 } }, 
-			{ set: { idInc: i } } 
-			);
-		timeOutsideStart = Date.parse(timeOutsideStartVar.createdAt);
-			//count time between two records,
-		 timeOutsideEndVar = BertStatus.findOne( 
-			{ bertStatus: 1 }, 
-			{ sort: { createdAt: -1 } }, 
-			{ set: { idInc: i + 1 } } 
-			);
-		 timeOutsideEnd = Date.parse(timeOutsideEndVar.createdAt);
-//doesnt work yet...
 
-		 		var timeOutsideTotalVar = InOutDurationDB.find().timeOutsideTotal
-		 		var timeOutsidePeriodTotal = timeOutsideEnd - timeOutsideStart // TIME OUTSIDE
-		 		InOutDurationDB.insert({
-		 			timeOutsideTotal: timeOutsidePeriodTotal + timeOutsideTotalVar
-		 		});
-		 	
-		 		console.log(timeOutsideTotalVar)
-
-		 	}
 
 
 		

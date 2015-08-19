@@ -25,7 +25,7 @@ Template.charts.helpers({
                   type: 'timeseries',
                   tick: { format: '%H:%M' }
                 }, 
-          type: 'area-spline'                 
+          type: 'area'                 
         }
       };
     },
