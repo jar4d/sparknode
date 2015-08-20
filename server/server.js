@@ -1,20 +1,33 @@
 Meteor.startup(function(){
 	if(BertStatus.find().count() == 0){
 			BertStatus.insert({
+				bertStatus: 0,
+              	bertStatusString: 'I\'m in!',
+              	startEnd:"Start",
 				createdAt: new Date(),//hacky - this needs to change!
 				idInc: 0
 			});
+
 	}
-	else if(InOutDurationDB.find().count() == 0){
+	 if(InOutDurationDB.find().count() == 0){
 		InOutDurationDB.insert({
-			timeOutsideTotal: 0,
-			timeInsideTotal: 0
-		});
+				     	inTotal: 1,
+				     	outTotal: 1
+				     });
+
 	}
+
+	startDate = new Date();
+});
+		     
+
+Meteor.publish('bertStatus', function(){
+	return BertStatus.find();
 });
 
-
-
+Meteor.publish('inOutDurationDB', function(){
+	return InOutDurationDB.find();
+});
 
 var spark = Meteor.npmRequire('sparknode');
 
@@ -49,28 +62,32 @@ core.on('bertStatus', Meteor.bindEnvironment(function handler(eventData) {
 
 			//Recalculate IN total
 		     var inStartTotal=0;
-		     var cursor=BertStatus.find({bertStatus: 1, startEnd:"Start"}).fetch();
-		     cursor.forEach(function(createdAt){
-		     var inStartTotal = inStartTotal + Date.parse(createdAt);
+		     var cursor=BertStatus.find({bertStatus: 1, startEnd:"Start"});
+		     cursor.forEach(function(row){
+		     	var inStartPeriod = Date.parse(row.createdAt);
+		     	inStartTotal = inStartTotal + inStartPeriod;
+
 		     });
-		     var inEndTotal=0;
-		     var cursor=BertStatus.find({bertStatus: 1, startEnd:"End"}).fetch();
-		     cursor.forEach(function(createdAt){
-		     var inEndTotal = inEndTotal + Date.parse(createdAt);
+ 			     var inEndTotal=0;
+		     var cursor=BertStatus.find({bertStatus: 1, startEnd:"End"});
+		     cursor.forEach(function(row){
+		     	var inEndPeriod = Date.parse(row.createdAt);
+		     	inEndTotal = (inEndTotal + inEndPeriod);
+		     	console.log("inEndTotal: " + inEndTotal) //this INENDTOTAL number is too small???
 		     });
-		     inTotal = inEndTotal - inStartTotal
-		     //return inTotal;
-		     console.log("in total: " + inTotal)
-
-		     console.log("furp")
-
-
-
-
+		     inTotalResult = Math.abs(inEndTotal - inStartTotal) - startDate;
+		     	console.log("in total: " + inEndTotal)
+		     	console.log(" - " + inStartTotal)
+		     	console.log( " = " + inTotalResult)
+		     var outTotal = InOutDurationDB.findOne().outTotal
+		     InOutDurationDB.update({},
+		     	{
+		     		inTotal: inTotalResult,
+		     		outTotal:outTotal
+		     	});
 	}
 	else if (bertStatusString == 'I\'m in!'){
 		//bertStatus = 0
-
     	currentIdInc = BertStatus.findOne({},{sort:{idInc:-1}}).idInc || 1;
 
 			BertStatus.insert({
@@ -89,43 +106,59 @@ core.on('bertStatus', Meteor.bindEnvironment(function handler(eventData) {
               idInc: currentIdInc + 2
               });
 
+
 			//Recalculate OUT total
 		     var outStartTotal=0;
 		     var cursor=BertStatus.find({bertStatus: 0, startEnd:"Start"});
-		     
 		     cursor.forEach(function(row){
-		     var outStartTotal = outStartTotal + Date.parse(row.createdAt);
+		     	var outStartPeriod = Date.parse(row.createdAt);
+		     	outStartTotal = outStartTotal + outStartPeriod;
+
 		     });
-		     var outEndTotal=0;
+ 			     var outEndTotal=0;
 		     var cursor=BertStatus.find({bertStatus: 0, startEnd:"End"});
 		     cursor.forEach(function(row){
-		     var outEndTotal = outEndTotal + Date.parse(row.createdAt);
+		     	var outEndPeriod = Date.parse(row.createdAt);
+		     	outEndTotal = outEndTotal + outEndPeriod;
 		     });
-		     outTotal = outEndTotal - outStartTotal
-		     //return outTotal;
-		     console.log("out total: " + outTotal)
-		     console.log("furp")
+		     outTotalResult = Math.abs(outEndTotal - outStartTotal) - startDate;
+		     console.log("out total: " + outEndTotal)
+		     console.log(" - " + outStartTotal)
+		     console.log( " = " + outTotalResult)
+		     var inTotal = InOutDurationDB.findOne().inTotal
+		     InOutDurationDB.update({},
+		     	{
+		     	outTotal: outTotalResult,
+		     	inTotal: inTotal
+		     	});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	}
-
-
-
-
-
-
-
-
-		
-
-
-
-
-
-
-
-
-
-
 
 
 	}));

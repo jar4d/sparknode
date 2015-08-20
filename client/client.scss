@@ -1,0 +1,32 @@
+body {
+	background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/45544/background-svg.svg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.icons {
+	font-size: 80px;
+}
+
+.statuspanel {
+  background-color: rgba(255,255,255, 0.5);
+  color: inherit;
+
+}
+
+.nopadding {
+   padding-top: 0px;
+   padding-bottom: 0px;
+   margin: 0px;
+     display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.homecontainer {
+	padding: 10px;
+}
+
+
