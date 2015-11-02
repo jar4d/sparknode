@@ -7,7 +7,7 @@ body {
 }
 
 .icons {
-	font-size: 80px;
+	font-size: 40px;
 }
 
 .statuspanel {
@@ -23,6 +23,13 @@ body {
      display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.nopadding2 {
+   padding-top: 3.5px;
+   padding-bottom: 3.5px;
+   margin: 0px;
+
 }
 
 .homecontainer {

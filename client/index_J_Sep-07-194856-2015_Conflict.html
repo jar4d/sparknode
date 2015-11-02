@@ -1,0 +1,21 @@
+<head></head>
+<body>
+
+	  	{{>bertStatusTemplate}}
+
+		{{>charts}}
+</body>
+
+<template name="bertStatusTemplate">
+<h1>{{status.bertStatusString}}</h1>
+</template>
+
+<template name="charts">
+
+Time Series
+
+{{>c3 data=lineChartPlot id="chart1"}}
+
+<h2>How often is he out?</h2>
+{{>c3 donutChartPlot id="chart2"}}
+</template>	

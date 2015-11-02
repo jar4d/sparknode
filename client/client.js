@@ -34,9 +34,9 @@ Meteor.startup(function(){
 
       var minutes = Math.floor(now / 60);
       var seconds = Math.floor(now % 60); // that % is modulo, the remainter when totaltime / 60...
-      var minutes = minutes < 10 ? "0" + minutes : minutes;
+      var minutes = minutes < 10 ? "" + minutes : minutes;
       Session.set('minutes',minutes);
-      var seconds = seconds < 10 ? "0" + seconds : seconds;
+      var seconds = seconds < 10 ? "" + seconds : seconds;
       Session.set('seconds',minutes);
 
       return minutes + " minutes and " + seconds +" seconds"
@@ -45,11 +45,15 @@ Meteor.startup(function(){
 
 //realtime graphs
 Template.charts.helpers({
-'lineChartPlot': function(){
+'inOutLineChartPlot': function(){
     var BertStatusVar = BertStatus.find().fetch();
 
         return{
           data: {
+            type:'area',
+            colors:{
+            	'bertStatus': '#16D99B'
+            },
             json: BertStatusVar,
             keys: {
             value: ['bertStatus'],
@@ -57,20 +61,37 @@ Template.charts.helpers({
             }
           },
           axis:{
+
               x:{
                   type: 'timeseries',
                   tick: { format: '%H:%M' }
                 }, 
-          type: 'area'                 
+              y:{
+              	//max:2,
+              	min:0,
+              	tick: {
+              		//count: 0,
+                    format: function (d) { 
+                    	if(d == 0){
+                    		return "Inside"
+                    	}
+                    	if(d == 1){
+                    		return "Outside"
+                    	}
+              		}
+              }
         }
-      };
-    },
+      }
+    }
 
-'donutChartPlot': function(){
+},
+
+
+'inOutDonutChartPlot': function(){
 	var total = InOutDurationDB.findOne();
 	var inTotal = total.inTotal
 	//var inTotalHours = intotal.getHours();
-	//var outTotal = total.outTotal.getHours();
+	var outTotal = total.outTotal
 
     Session.set( 'inTotal', total.inTotal );
     Session.set( 'outTotal', total.outTotal );
@@ -81,22 +102,34 @@ Template.charts.helpers({
 	return{
 		data: {
 	        columns: [ ['Time inside', Session.get('inTotal')],['Time outside', Session.get('outTotal')] ],
-			type: 'donut'
+			type: 'donut',
+	        colors: {
+            'Time inside': '#2A1C8C',
+            'Time outside': '#16D99B'
+        },
 			},
-	  	color: {
-		    pattern: ['#AACCB1', '#D4D6D9']
-			  },
+
 	    donut: {
-			    label: {
-			      format: function (value) { return value; }
-			    }
 		}
-
-
-
-
-
-}	
 }
+},
+
+'weightChartPlot': function(){
+        return{
+          data: {
+            type:'area',
+            colors:{
+            	'Weight': '#16D99B'
+            },
+            json: {
+            	Weight: [4.5, 4.2, 4.1, 4, 4.3, 4.6, 4.8],
+            	Food: [0.5, 0.3, 0.3, 0.3, 0.4, 0.5, 0.6]
+            }
+          }
+      }
+    }	
+
+
+
 });
 

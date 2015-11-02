@@ -1,4 +1,6 @@
 Meteor.startup(function(){
+	startDate = new Date();
+
 	if(BertStatus.find().count() == 0){
 			BertStatus.insert({
 				bertStatus: 0,
@@ -11,13 +13,12 @@ Meteor.startup(function(){
 	}
 	 if(InOutDurationDB.find().count() == 0){
 		InOutDurationDB.insert({
-				     	inTotal: 1,
-				     	outTotal: 1
+				     	inTotal: 1 - startDate,
+				     	outTotal: 1 - startDate
 				     });
 
 	}
 
-	startDate = new Date();
 });
 		     
 
@@ -75,7 +76,7 @@ core.on('bertStatus', Meteor.bindEnvironment(function handler(eventData) {
 		     	inEndTotal = (inEndTotal + inEndPeriod);
 		     	console.log("inEndTotal: " + inEndTotal) //this INENDTOTAL number is too small???
 		     });
-		     inTotalResult = Math.abs(inEndTotal - inStartTotal) - startDate;
+		     inTotalResult = Math.abs(inEndTotal - inStartTotal);
 		     	console.log("in total: " + inEndTotal)
 		     	console.log(" - " + inStartTotal)
 		     	console.log( " = " + inTotalResult)
@@ -121,7 +122,7 @@ core.on('bertStatus', Meteor.bindEnvironment(function handler(eventData) {
 		     	var outEndPeriod = Date.parse(row.createdAt);
 		     	outEndTotal = outEndTotal + outEndPeriod;
 		     });
-		     outTotalResult = Math.abs(outEndTotal - outStartTotal) - startDate;
+		     outTotalResult = Math.abs(outEndTotal - outStartTotal);
 		     console.log("out total: " + outEndTotal)
 		     console.log(" - " + outStartTotal)
 		     console.log( " = " + outTotalResult)
