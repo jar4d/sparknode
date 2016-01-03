@@ -32,7 +32,7 @@ Meteor.publish('inOutDurationDB', function(){
 
 var spark = Meteor.npmRequire('sparknode');
 
-var core = new spark.Core({accessToken:'88d7dd2b3dcc7c3453532454677a76f717830f69',id:'40003c000c47343432313031'});
+var core = new spark.Core({accessToken:'d12e23f44cbb73dbb07b7e3f97e0f611d4d67334',id:'40003c000c47343432313031'});
 
 //CORE EVENT SYNTAX: core.on(eventName, function handler(eventData) {/*do something;*/});
 //Watches for an event, logs numerically into database. Wraps as an Async function.

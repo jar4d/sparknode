@@ -8,15 +8,25 @@ Router.configure({
 
 });
 
-Router.route('/', {
+Router.route('settings', {
 	template: 'home',
 	waitOn: function(){
 		Meteor.subscribe('bertStatus');
 		Meteor.subscribe('inOutDurationDB');
   },
   data: function(){
-  		 if(this.ready()) return BertStatus.find(); return InOutDurationDB.find();
-		
+  		 if(this.ready()) return BertStatus.find(); return InOutDurationDB.find();	
+  }
+});
+
+Router.route('/', {
+  template: 'dash',
+  waitOn: function(){
+    Meteor.subscribe('bertStatus');
+    Meteor.subscribe('inOutDurationDB');
+  },
+  data: function(){
+       if(this.ready()) return BertStatus.find(); return InOutDurationDB.find();  
   }
 
 

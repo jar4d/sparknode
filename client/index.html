@@ -116,6 +116,67 @@
 
 </template>
 
+<template name="dash">
+	{{>dashTemplate}}
+</template>
+
+
+<template name="dashTemplate">
+<div class="row">
+		<div class="col-md-4">
+		</div>
+	<div class="col-md-4">
+			<div class="panel panel-default statuspanel">	
+				<div class="panel-body">
+						<div class="row">
+							<div class="icons">
+								<i class={{statusIcon}}></i> 
+								</div>
+								<div>
+									<h3>{{statusText}} {{counter}} </h3>
+								</div>
+						</div>
+				</div>
+			</div>
+	</div>
+</div>
+
+<div class="row">
+		<div class="col-md-4">
+		</div>
+
+	<div class="col-md-4">
+			<div class="panel panel-default statuspanel">	
+				<div class="panel-body">
+						<div class="row">
+								{{>c3 inOutDonutChartPlot id="chart2"}}
+								<div>
+									<h2>...he's pretty active</h2>
+								</div>
+						</div>
+				</div>
+			</div>
+	<div class="panel panel-default statuspanel">	
+		<div class="panel-body">
+				<div class="row">
+						{{>c3 inOutDonutChartPlot id="chart4"}}
+						<div>
+							<h2>and his key stats are on target.</h2>
+						</div>
+				</div>
+		</div>
+	</div>
+
+
+	</div>
+
+</div>
+
+</template>
+
+
+
+
 
 
 <template name="home">
@@ -124,8 +185,6 @@
 		{{>charts}}
 	</div>
 </template>
-
-
 
 
 
